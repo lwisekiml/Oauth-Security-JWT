@@ -17,6 +17,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         OAuth2User oAuth2User = super.loadUser(userRequest);
         System.out.println("oAuth2User.getAttributes() = " + oAuth2User.getAttributes());
 
+        // 어디서 넘어온 것인지 확인(naver, google ..)
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
         OAuth2Response oAuth2Response = null;
 
@@ -26,6 +27,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             return null;
         }
 
-        return super.loadUser(userRequest);
+        String role = "ROLE_USER";
+
+        return new CustomOauth2User(oAuth2Response, role);
     }
 }
