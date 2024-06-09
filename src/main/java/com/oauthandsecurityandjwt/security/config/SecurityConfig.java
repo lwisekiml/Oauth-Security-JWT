@@ -2,6 +2,8 @@ package com.oauthandsecurityandjwt.security.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.User;
@@ -21,17 +23,25 @@ public class SecurityConfig {
     }
 
     @Bean
+    public RoleHierarchy roleHierarchy() {
+
+        RoleHierarchyImpl hierarchy = new RoleHierarchyImpl();
+
+        hierarchy.setHierarchy("ROLE_C > ROLE_B\n" +
+                "ROLE_B > ROLE_A");
+
+        return hierarchy;
+    }
+
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
                 .authorizeRequests((auth) -> auth
-                        // .requestMatchers : 특정한 경로에 요청을 진행하고 싶다.
-                        .requestMatchers("/", "/login").permitAll()
-                        // role이 admin만 통과
-                        .requestMatchers("/admin").hasRole("ADMIN")
-                        // "/my/xxx" 페이지
-                        .requestMatchers("/my/**").hasAnyRole("ADMIN", "USER")
-                        // 로그인 한 사용자만 통과
+                        .requestMatchers("/login").permitAll()
+                        .requestMatchers("/").hasAnyRole("A")
+                        .requestMatchers("/manager").hasAnyRole("B")
+                        .requestMatchers("/admin").hasAnyRole("C")
                         .anyRequest().authenticated()
                 );
 
@@ -53,13 +63,13 @@ public class SecurityConfig {
         UserDetails user1 = User.builder()
                 .username("user1")
                 .password(bCryptPasswordEncoder().encode("1234"))
-                .roles("ADMIN")
+                .roles("C")
                 .build();
 
         UserDetails user2 = User.builder()
                 .username("user2")
                 .password(bCryptPasswordEncoder().encode("1234"))
-                .roles("USER")
+                .roles("B")
                 .build();
 
         return new InMemoryUserDetailsManager(user1, user2);
