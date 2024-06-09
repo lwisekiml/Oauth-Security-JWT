@@ -25,6 +25,15 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 );
 
+        http
+                .formLogin((auth) -> auth.loginPage("/login")
+                        .loginProcessingUrl("/loginProc") // login 페이지에 action="/loginProc" 로 했다.
+                        .permitAll()
+                );
+
+        http
+                .csrf((auth) -> auth.disable());
+
         return http.build();
     }
 }
