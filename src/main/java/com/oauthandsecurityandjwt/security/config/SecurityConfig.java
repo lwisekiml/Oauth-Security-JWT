@@ -22,7 +22,7 @@ public class SecurityConfig {
         http
                 .authorizeRequests((auth) -> auth
                         // .requestMatchers : 특정한 경로에 요청을 진행하고 싶다.
-                        .requestMatchers("/", "/login").permitAll()
+                        .requestMatchers("/", "/login", "/loginProc", "/join", "/joinProc").permitAll()
                         // role이 admin만 통과
                         .requestMatchers("/admin").hasRole("ADMIN")
                         // "/my/xxx" 페이지
