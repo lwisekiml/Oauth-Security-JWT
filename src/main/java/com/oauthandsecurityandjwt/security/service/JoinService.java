@@ -25,7 +25,7 @@ public class JoinService {
         UserEntity data = new UserEntity();
         data.setUsername(joinDto.getUsername());
         data.setPassword(bCryptPasswordEncoder.encode(joinDto.getPassword()));
-        data.setRole("ROLE_USER");
+        data.setRole("ROLE_ADMIN"); // admin 페이지 접속 테스트를 위함
 
         userRepository.save(data);
     }
