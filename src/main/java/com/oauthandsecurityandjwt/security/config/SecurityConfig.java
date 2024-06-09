@@ -2,6 +2,7 @@ package com.oauthandsecurityandjwt.security.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -46,10 +47,11 @@ public class SecurityConfig {
                 );
 
         http
-                .formLogin((auth) -> auth.loginPage("/login")
-                        .loginProcessingUrl("/loginProc") // login 페이지에 action="/loginProc" 로 했다.
-                        .permitAll()
-                );
+                .httpBasic(Customizer.withDefaults());
+//                .formLogin((auth) -> auth.loginPage("/login")
+//                        .loginProcessingUrl("/loginProc") // login 페이지에 action="/loginProc" 로 했다.
+//                        .permitAll()
+//                );
 
 //        http
 //                .csrf((auth) -> auth.disable());
